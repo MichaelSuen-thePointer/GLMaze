@@ -18,9 +18,21 @@
     <ClInclude Include="glFacetObject.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="glPlayer.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="glPoint.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="vec.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="vec.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

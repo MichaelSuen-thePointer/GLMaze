@@ -31,7 +31,7 @@ vector<vector<char>> maze_data{
 
 VertexArray maze;
 
-void prepareCube(int x, int y)
+void prepareCube(double x, double y)
 {
     VertexArrayCube cube({
         { x,y,0 },{ x, y + 1, 0 },{ x + 1, y, 0 },{ x + 1, y + 1, 0 },
@@ -64,8 +64,6 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glColor3f(0, 1, 1);
-    
     maze.Draw();
 
     glutSwapBuffers();
@@ -91,10 +89,28 @@ int main(int argc, char** argv)
     glLoadIdentity();
     gluLookAt(20, 20, 20, 5, 5, 0, 0, 0, 1);
     
+    glEnable(GL_LIGHT_MODEL_AMBIENT);
+
+    
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
 
+    GLfloat lightAmbient[] = {0.1, 0.1, 0.1, 1.0};
+    GLfloat lightDiffuse[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat lightSpecular[] = {0.5, 0.5, 0.5, 1.0};
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
+
+    GLfloat lightPosition[] = {8, 8, 4, 1.0};   // w²»Îª0
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT, GL_DIFFUSE);
+    glColor3f(0.5, 0.5, 0.5);
+    
     init();
     glutDisplayFunc(display);
     glutMainLoop();
