@@ -4,9 +4,7 @@
 #include <vector>
 #include <cmath>
 #include "glFacetObject.h"
-
-#define WINDOW_HEIGHT   1000
-#define WINDOW_WIDTH    1000
+#include "glPlayer.h"
 
 using std::vector;
 
@@ -30,6 +28,7 @@ vector<vector<char>> maze_data{
 };  /* reference from internet */
 
 VertexArray maze;
+Player player{ {16.5,16.5,0.5 }, {1,1,0}, { 900,900 }, 75 };
 
 void prepareCube(double x, double y)
 {
@@ -74,6 +73,152 @@ void init()
     prepareWalls();
 }
 
+void keydown(unsigned char ch, int x, int y)
+{
+    if (ch == 'w')
+    {
+        player.WDown();
+    }
+    else if (ch == 's')
+    {
+        player.SDown();
+    }
+    else if (ch == 'a')
+    {
+        player.ADown();
+    }
+    else if (ch == 'd')
+    {
+        player.DDown();
+    }
+}
+
+void keyup(unsigned char ch, int x, int y)
+{
+    if (ch == 'w')
+    {
+        player.WUp();
+    }
+    else if (ch == 's')
+    {
+        player.SUp();
+    }
+    else if (ch == 'a')
+    {
+        player.AUp();
+    }
+    else if (ch == 'd')
+    {
+        player.DUp();
+    }
+}
+
+bool hasWall(int x, int y)
+{
+    assert(maze_data.size() < (size_t)INT_MAX);
+    if (x >= 0 && x < (int)maze_data.size() && y >= 0 && y < (int)maze_data.size())
+    {
+        return maze_data[x][y] == 'H';
+    }
+    return false;
+}
+
+void check_conor(int x, int y, int offx, int offy, vector<Vec3>& walls)
+{
+    Vec3 wallVec;
+    if (hasWall(x + offx, y))
+    {
+        wallVec += Vec3(-offx, offy, 0);
+    }
+    if (hasWall(x + offx, y + offy))
+    {
+        wallVec += Vec3(-offx, -offy, 0);
+    }
+    if (hasWall(x, y + offy))
+    {
+        wallVec += Vec3(offx, -offy, 0);
+    }
+    walls.emplace_back(wallVec.x, 0, 0);
+    walls.emplace_back(0, wallVec.y, 0);
+}
+
+std::vector<Vec3> getWalls()
+{
+    vector<Vec3> walls;
+    auto pos = player.Position();
+
+    int x = pos.x;
+    int y = pos.y;
+
+    double toN = pos.x - x;
+    double toS = x + 1 - pos.x;
+    double toE = y + 1 - pos.y;
+    double toW = pos.y - y;
+
+    if (toN < 0.1)
+    {
+        if (toE < 0.1)
+        {
+            check_conor(x, y, -1, 1, walls);
+        }
+        if (toW < 0.1)
+        {
+            check_conor(x, y, -1, -1, walls);
+        }
+        if (hasWall(x - 1, y))
+        {
+            walls.emplace_back(1, 0, 0);
+        }
+    }
+
+    if (toS < 0.1)
+    {
+        if (toE < 0.1)
+        {
+            check_conor(x, y, 1, 1, walls);
+        }
+        if (toW < 0.1)
+        {
+            check_conor(x, y, 1, -1, walls);
+        }
+        if (hasWall(x + 1, y))
+        {
+            walls.emplace_back(-1, 0, 0);
+        }
+    }
+
+    if (toW < 0.1)
+    {
+        if (hasWall(x, y - 1))
+        {
+            walls.emplace_back(0, 1, 0);
+        }
+    }
+
+    if (toE < 0.1)
+    {
+        if (hasWall(x, y + 1))
+        {
+            walls.emplace_back(0, -1, 0);
+        }
+    }
+
+    return walls;
+}
+
+void idle()
+{
+
+    player.OnIdle(Vec3(0, 0, 1), getWalls());
+
+    //player.OnIdle();
+}
+
+void mouse(int x, int y)
+{
+    player.MouseMove(x, y);
+}
+
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
@@ -82,37 +227,37 @@ int main(int argc, char** argv)
     glutInitWindowPosition(100, 100);
     glutCreateWindow("OpengGL Demo");
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(75.0f, 1.0f, 1.0f, 100);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(20, 20, 20, 5, 5, 0, 0, 0, 1);
-    
+    player.Look();
+
     glEnable(GL_LIGHT_MODEL_AMBIENT);
 
-    
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
 
-    GLfloat lightAmbient[] = {0.1, 0.1, 0.1, 1.0};
-    GLfloat lightDiffuse[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat lightSpecular[] = {0.5, 0.5, 0.5, 1.0};
+    GLfloat lightAmbient[] = { 0.1F, 0.1F, 0.1F, 1.0F };
+    GLfloat lightDiffuse[] = { 1.0F, 1.0F, 1.0F, 1.0F };
+    GLfloat lightSpecular[] = { 0.5F, 0.5F, 0.5F, 1.0F };
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
 
-    GLfloat lightPosition[] = {8, 8, 4, 1.0};   // w不为0
+    GLfloat lightPosition[] = { 8, 8, 4, 1.0 };   // w不为0
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_DIFFUSE);
     glColor3f(0.5, 0.5, 0.5);
-    
+
     init();
     glutDisplayFunc(display);
+    glutKeyboardFunc(keydown);
+    glutKeyboardUpFunc(keyup);
+    glutPassiveMotionFunc(mouse);
+
+    glutIdleFunc(idle);
+
     glutMainLoop();
 
     return 0;

@@ -148,12 +148,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mat.cpp" />
     <ClCompile Include="vec.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glFacetObject.h" />
     <ClInclude Include="glPlayer.h" />
     <ClInclude Include="glPoint.h" />
+    <ClInclude Include="mat.h" />
     <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
