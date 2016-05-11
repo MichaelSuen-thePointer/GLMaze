@@ -238,15 +238,15 @@ int main(int argc, char** argv)
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
 
-    GLfloat lightAmbient[] = { 0.1F, 0.1F, 0.1F, 1.0F };
-    GLfloat lightDiffuse[] = { 1.0F, 1.0F, 1.0F, 1.0F };
+    GLfloat lightAmbient[] = { 0.01F, 0.01F, 0.01F, 1.0F };
+    GLfloat lightDiffuse[] = { 0.5F, 0.5F, 0.5F, 0.5F };
     GLfloat lightSpecular[] = { 0.5F, 0.5F, 0.5F, 1.0F };
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
 
-    GLfloat lightPosition[] = { 8, 8, 4, 1.0 };   // w不为0
+    GLfloat lightPosition[] = { 16, 16, 3, 1.0 };   // w不为0
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
     glEnable(GL_COLOR_MATERIAL);

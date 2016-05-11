@@ -2,7 +2,6 @@
 
 #include <type_traits>
 
-
 struct Point3
 {
     double x, y, z;
@@ -11,7 +10,7 @@ struct Point3
 template<>
 struct std::less<Point3>
 {
-    bool operator()(const Point3& a, const Point3& b)
+    bool operator()(const Point3& a, const Point3& b) const
     {
         if (a.x < b.x)
         {
