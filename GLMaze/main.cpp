@@ -9,8 +9,8 @@
 using std::vector;
 
 vector<vector<char>> maze_data{
-    { 'H','H','H','H','H','H','H','H','H','H','H','H','H','H','H','H' },
-    { 'H',' ',' ',' ',' ',' ',' ',' ','H',' ',' ',' ',' ',' ',' ','H' },
+    { 'H',' ','H','H','H','H','H','H','H','H','H','H','H','H','H','H' },
+    { 'H',' ','H',' ',' ',' ',' ',' ','H',' ',' ',' ',' ',' ',' ','H' },
     { 'H',' ','H',' ','H','H','H',' ','H',' ','H',' ',' ',' ',' ','H' },
     { 'H',' ','H','H',' ',' ','H',' ','H','H',' ','H',' ','H',' ','H' },
     { 'H',' ',' ',' ',' ',' ','H',' ',' ',' ',' ',' ',' ','H',' ','H' },
@@ -42,7 +42,6 @@ void prepareCube(double x, double y)
 
 void prepareWalls()
 {
-
     std::size_t mazeHeight = maze_data.size();
     std::size_t mazeWidth = maze_data[0].size();
 
@@ -61,11 +60,11 @@ void prepareWalls()
 
 void display()
 {
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     maze.Draw();
-
     glutSwapBuffers();
+
 }
 
 void init()
@@ -147,13 +146,13 @@ std::vector<Vec3> getWalls()
     vector<Vec3> walls;
     auto pos = player.Position();
 
-    int x = pos.x;
-    int y = pos.y;
+    int x = pos.x >= 0 ? pos.x : pos.x - 1;
+    int y = pos.y >= 0 ? pos.y : pos.y - 1;
 
-    double toN = pos.x - x;
-    double toS = x + 1 - pos.x;
-    double toE = y + 1 - pos.y;
-    double toW = pos.y - y;
+    double toN =  pos.x - x;
+    double toS =  x + 1 - pos.x;
+    double toE =  y + 1 - pos.y;
+    double toW =  pos.y - y;
 
     if (toN < 0.1)
     {
@@ -208,9 +207,7 @@ std::vector<Vec3> getWalls()
 
 void idle()
 {
-
     player.OnIdle(Vec3(0, 0, 1), getWalls());
-
     //player.OnIdle();
 }
 
@@ -227,7 +224,6 @@ int main(int argc, char** argv)
     glutInitWindowPosition(100, 100);
     glutCreateWindow("OpengGL Demo");
 
-    player.Look();
 
     glEnable(GL_LIGHT_MODEL_AMBIENT);
 

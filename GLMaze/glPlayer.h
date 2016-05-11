@@ -146,6 +146,8 @@ public:
         }
     }
 
+    const Vec3& Speed() const { return _velocity; }
+
     void OnIdle(Vec3 ground = Vec3(0, 0, 1), const std::vector<Vec3>& walls = std::vector<Vec3>())
     {
         SpeedUp(ground);
