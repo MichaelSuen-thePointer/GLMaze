@@ -147,6 +147,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="glFacetObject.cpp" />
+    <ClCompile Include="glPlayer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mat.cpp" />
     <ClCompile Include="vec.cpp" />

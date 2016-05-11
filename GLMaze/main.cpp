@@ -216,6 +216,13 @@ void mouse(int x, int y)
     player.MouseMove(x, y);
 }
 
+void redisplay(int value)
+{
+    glutTimerFunc(16, redisplay, 1);
+    idle();
+    glutPostRedisplay();
+}
+
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
@@ -251,8 +258,8 @@ int main(int argc, char** argv)
     glutKeyboardFunc(keydown);
     glutKeyboardUpFunc(keyup);
     glutPassiveMotionFunc(mouse);
-
-    glutIdleFunc(idle);
+    glutTimerFunc(16, redisplay, 0);
+    //glutIdleFunc(idle);
 
     glutMainLoop();
 
